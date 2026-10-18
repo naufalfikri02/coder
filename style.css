@@ -1,137 +1,146 @@
+/* 1. CSS VARIABLES (Membuatnya Dinamis untuk Theming) */
+:root {
+    --primary: #FFC108;
+    --text-color: #979797;
+    --heading-color: #000000;
+    --bg-color: #ffffff;
+    --font-main: "Montserrat", sans-serif;
+    
+    /* Spacing dinamis menggunakan persentase untuk layar besar/kecil */
+    --padding-x: 8%; 
+    --padding-y: 64px;
+    --transition: all 0.3s ease-in-out;
+}
+
+/* 2. UNIVERSAL RESET */
 * {
-    font-family: "Montserrat";
     box-sizing: border-box;
-    scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
 }
 
 html, body {
-    padding: 0;
-    margin: 0;
+    font-family: var(--font-main);
+    scroll-behavior: smooth;
+    background-color: var(--bg-color);
+    overflow-x: hidden;
 }
 
+/* 3. FLUID TYPOGRAPHY (Ukuran menyesuaikan layar otomatis) */
 h1 {
     font-weight: 700;
-    font-size: 48px;
-    margin: 0 0 16px 0;
+    font-size: clamp(32px, 5vw, 48px);
+    color: var(--heading-color);
+    margin-bottom: 16px;
 }
 
 a {
     text-decoration: none;
-    color: black;
-    font-size: 24px;
+    color: var(--heading-color);
+    font-size: clamp(16px, 2vw, 24px);
+    transition: var(--transition);
 }
 
 p {
-    color: #979797;
-    margin: 0 0 16px 0;
-    font-size: 24px;
+    color: var(--text-color);
+    margin-bottom: 16px;
+    font-size: clamp(16px, 2vw, 24px);
+    line-height: 1.6;
 }
 
 section {
-    padding: 64px 128px;
+    padding: var(--padding-y) var(--padding-x);
 }
 
 img, iframe {
-    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
+/* 4. BUTTONS */
 .btn {
-    background-color: #FFC108;
+    background-color: var(--primary);
     color: white;
-    padding: 8px 24px;
+    padding: 12px 24px;
+    border: 2px solid var(--primary);
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: transparent;
+    color: var(--primary);
 }
 
 .btn-alt {
-    background-color: white;
-    color: black;
+    background-color: transparent;
+    color: var(--heading-color);
     margin-right: 16px;
-    border: 2px solid #FFC108;
+    border: 2px solid var(--primary);
 }
 
+.btn-alt:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* 5. HEADER & NAVIGATION */
 #header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 128px;
+    padding: 16px var(--padding-x);
     position: sticky;
     top: 0;
-    background-color: white;
-    z-index: 5;
+    background-color: var(--bg-color);
+    z-index: 50;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 #header h1 {
     margin: 0;
-    /* animation: flash 1s infinite; */
     animation: bounceIn 1s;
 }
 
-@keyframes bounceIn {
-    0% {
-        filter: opacity(0);
-        transform: translateY(-20px);
-    }
-    35% {
-        filter: opacity(0.25);
-        transform: translateY(0);
-    }
-    70% {
-        filter: opacity(0.5);
-        transform: translateY(-10px);
-    }
-    100% {
-        filter: opacity(1);
-        transform: translateY(0);
-    }
-}
-
-@keyframes flash {
-    from {
-        filter: opacity(0);
-    }
-    to {
-        filter: opacity(1);
-    }
-}
-
-nav > a {
-    margin-left: 12px;
+nav {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
 }
 
 nav > a:hover {
-    color: #FFC108;
+    color: var(--primary);
 }
 
-#landing {
+/* ANIMATIONS */
+@keyframes bounceIn {
+    0% { opacity: 0; transform: translateY(-20px); }
+    35% { opacity: 0.25; transform: translateY(0); }
+    70% { opacity: 0.5; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 6. LAYOUT FLEX & GRID YANG RESPONSIVE */
+#landing, #about {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    column-gap: 16px;
+    gap: 32px;
 }
 
-#landing p {
-    margin-bottom: 32px;
-}
-
-#landing > div {
-    width: 50%;
-}
-
-#about {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    column-gap: 16px;
-}
-
-#about > div {
-    width: 50%;
+#landing > div, #about > div {
+    flex: 1; /* Menggantikan width: 50% agar lebih adaptif */
 }
 
 .about-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    /* Grid dinamis: otomatis menyesuaikan kolom tanpa media query */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 24px;
     text-align: center;
-    margin-top: 72px;
+    margin-top: 48px;
 }
 
 .about-stats-item {
@@ -143,25 +152,21 @@ nav > a:hover {
 .about-stats-item div {
     width: 50px;
     height: 10px;
-    background-color: #FFC108;
+    background-color: var(--primary);
     margin-bottom: 16px;
-}
-
-.service-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    border-radius: 4px;
 }
 
 .service-header h1 {
     position: relative;
+    display: inline-block;
 }
 
 .service-header h1::before {
     content: "";
     width: 60px;
     height: 60px;
-    background: url("./images/accent1.svg");
+    background: url("./images/accent1.svg") no-repeat center/cover;
     position: absolute;
     left: -20px;
     top: -10px;
@@ -170,47 +175,44 @@ nav > a:hover {
 
 .service-detail {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 128px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 48px;
     margin-top: 72px;
 }
 
 .service-detail-item {
-    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: var(--transition);
 }
 
 .service-detail-item:hover {
-    transform: scale(1.15);
+    transform: translateY(-10px); /* Skala 1.15 terlalu ekstrem, translateY lebih elegan */
+    box-shadow: 2px 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.service-detail-item img {
+    width: 100%;
+    filter: grayscale(1);
+    transition: var(--transition);
 }
 
 .service-detail-item:hover img {
     filter: grayscale(0);
 }
 
-.service-detail-item img {
-    width: 100%;
-    filter: grayscale(1);
+.service-detail-item h2, .service-detail-item p {
+    padding: 16px;
 }
 
-.service-detail-item h2 {
-    padding: 0 16px;
-}
-
-.service-detail-item p {
-    font-size: 16px;
-    padding: 0 16px;
-}
-
-#contact h1 {
-    position: relative;
-}
-
+/* 7. CONTACT & FORMS */
 #contact > h1::before {
     content: "";
     width: 60px;
     height: 60px;
     position: absolute;
-    background: url("./images/accent2.svg");
+    background: url("./images/accent2.svg") no-repeat center/cover;
     left: -20px;
     top: -10px;
     z-index: -1;
@@ -219,19 +221,20 @@ nav > a:hover {
 .contact-detail {
     display: flex;
     justify-content: space-between;
-    margin-top: 72px;
-    column-gap: 128px;
+    gap: 64px;
+    margin-top: 48px;
 }
 
 .contact-detail > div, .contact-detail > form {
-    width: 50%;
+    flex: 1;
 }
 
 form {
     display: flex;
     flex-direction: column;
-    border: 3px solid #FFC108;
-    padding: 64px 32px;
+    border: 3px solid var(--primary);
+    padding: 48px 32px;
+    border-radius: 8px;
 }
 
 form h1 {
@@ -239,145 +242,116 @@ form h1 {
     text-align: center;
 }
 
-
-form button {
-    border: none;
-}
-
-form button:hover {
-    cursor: pointer;
-}
-
 .form-group {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 32px;
+    gap: 24px;
     margin-top: 32px;
-    grid-template-areas:    "name subject"
-                            "email phone"
-                            "message message";
+    grid-template-areas:    
+        "name subject"
+        "email phone"
+        "message message";
 }
 
-#input-name {
-    grid-area: name;
-}
-
-#input-subject {
-    grid-area: subject;
-}
-
-#input-email {
-    grid-area: email;
-}
-
-#input-phone {
-    grid-area: phone;
-}
-
-#input-message {
-    grid-area: message;
-}
+#input-name { grid-area: name; }
+#input-subject { grid-area: subject; }
+#input-email { grid-area: email; }
+#input-phone { grid-area: phone; }
+#input-message { grid-area: message; }
 
 .input-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 32px;
 }
 
 .input-group label {
     font-weight: 700;
-    margin-bottom: 16px;
-    font-size: 24px;
+    margin-bottom: 8px;
+    font-size: clamp(16px, 1.5vw, 20px);
 }
 
-.input-group input {
+.input-group input, .input-group textarea {
     border: none;
     outline: none;
-    border-bottom: 1px solid black;
-    font-size: 20px;
+    border-bottom: 1px solid var(--heading-color);
+    font-size: 16px;
+    padding: 8px 0;
+    background: transparent;
+    transition: var(--transition);
 }
 
-.input-group input:focus {
-    border-bottom: 2px solid #FFC108;
+.input-group input:focus, .input-group textarea:focus {
+    border-bottom: 2px solid var(--primary);
 }
 
+/* 8. FOOTER */
 footer {
-    padding: 16px 128px;
-    background-color: #FFC108;
+    padding: 32px var(--padding-x);
+    background-color: var(--primary);
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
 }
 
 footer p {
     color: white;
-    width: 50%;
+    margin: 0;
 }
 
 .social-icon {
     display: flex;
-    gap: 32px;
+    gap: 24px;
 }
 
-@media only screen and (max-width: 1200px) {
-    .service-detail {
-        gap: 24px;
-    }
+/* =========================================
+   9. MEDIA QUERIES (Penyempurnaan Mobile) 
+   ========================================= */
 
-    .contact-detail {
-        gap: 24px;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-}
-
+/* Tablet & Laptop Kecil */
 @media only screen and (max-width: 992px) {
-    #header, #footer {
-        padding: 16px 32px;
+    :root {
+        --padding-x: 5%;
+        --padding-y: 48px;
     }
 
-    section {
-        padding: 64px 32px;
-    }
-
-    #landing {
-        flex-direction: column-reverse;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-    }
-
-    #landing > div {
-        width: 100%;
-    }
-
-    #about {
+    #landing, #about, .contact-detail {
         flex-direction: column;
         text-align: center;
-        justify-content: center;
-        align-items: center;
     }
 
-    #about > div {
-        width: 100%;
+    .service-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
     }
+}
 
-    .service-detail {
+/* Mobile Devices */
+@media only screen and (max-width: 768px) {
+    #header {
+        flex-direction: column;
         gap: 16px;
     }
 
-    .contact-detail {
-        flex-direction: column;
+    nav {
         justify-content: center;
-        align-items: center;
-        row-gap: 64px;
     }
 
-    .contact-detail form, .contact-detail > div {
-        width: 100%;
+    .form-group {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "name"
+            "subject"
+            "email"
+            "phone"
+            "message";
+    }
+
+    footer {
+        flex-direction: column;
+        text-align: center;
     }
 }
